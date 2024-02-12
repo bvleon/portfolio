@@ -1,0 +1,24 @@
+# Data exploration
+SELECT * 
+FROM `bigquery-public-data.london_bicycles.cycle_stations` 
+LIMIT 100
+
+SELECT *
+FROM `bigquery-public-data.london_bicycles.cycle_hire` 
+LIMIT 100
+
+## Performing a left join between the 'hires' and 'stations' tables to present the month, total number of rentals, and the average duration per bike rental 
+SELECT  
+  EXTRACT(MONTH FROM hire.start_date AT TIME ZONE 'Europe/London') AS month,
+  COUNT(*) AS total_rentals,
+  AVG(hire.duration) AS avg_duration
+FROM
+  `bigquery-public-data.london_bicycles.cycle_hire` hire
+LEFT JOIN
+  `bigquery-public-data.london_bicycles.cycle_stations` stations
+ON
+  hire.start_station_id = stations.id
+GROUP BY
+  month 
+ORDER BY
+  month;
